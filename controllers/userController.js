@@ -33,6 +33,20 @@ module.exports = {
       });
   },
 
+  // POST a new friend
+  addFriend(req, res) {
+    User.updateOne(
+      { _id: req.params.userId },
+      { $push: { friends: req.params.friendId } }
+      // { runValidators: true, new: true }
+    )
+      .then((user) => res.json(user))
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  },
+
   // PUT to update a user by its _id
 
   updateUser(req, res) {
@@ -61,5 +75,19 @@ module.exports = {
       )
       .then(() => res.json({ message: "User deleted!" }))
       .catch((err) => res.status(500).json(err));
+  },
+
+  // POST a new friend
+  removeFriend(req, res) {
+    User.updateOne(
+      { _id: req.params.userId },
+      { $pullAll: { friend: [req.params.friendId] } }
+      // { runValidators: true, new: true }
+    )
+      .then((user) => res.json(user))
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
   },
 };
