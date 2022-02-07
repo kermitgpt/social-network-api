@@ -11,7 +11,7 @@ module.exports = {
   // GET single thought by its _id
 
   getSingleThought(req, res) {
-    Thought.findOne({ _id: req.params.userId })
+    Thought.findOne({ _id: req.params.thoughtId })
       .then((user) => {
         !user
           ? res.status(404).json({ message: "No thought with that ID" })
@@ -33,8 +33,8 @@ module.exports = {
   // PUT to update a thought by its _id
 
   updateThought(req, res) {
-    Thought.findeOneAndUpdate(
-      { _id: req.params.userId },
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
       { $set: req.body },
       { runValidators: true, new: true }
     )
@@ -49,7 +49,7 @@ module.exports = {
   // DELETE to remove user by its _id
   deleteThought(req, res) {
     Thought.findOneAndDelete({
-      _id: req.params.userId,
+      _id: req.params.thoughtId,
     })
       .then((thought) =>
         !thought
@@ -64,8 +64,8 @@ module.exports = {
 
   // POST a new reaction
   addReaction(req, res) {
-    Thought.updateOne(
-      { _id: req.params.userId },
+    Thought.findOne(
+      { _id: req.params.thoughtId },
       { $push: { reactions: req.params.reactionId } }
     )
       .then((thought) => res.json(thought))
@@ -77,8 +77,8 @@ module.exports = {
 
   //DELETE to pull and remove a reaction by the reaction's reactionId value
   removeReaction(req, res) {
-    Thought.updateOne(
-      { _id: req.params.userId },
+    Thought.findOne(
+      { _id: req.params.thoughtId },
       { $pullAll: { reaction: [req.params.reactionId] } }
     )
       .then((thought) => res.json(thought))
